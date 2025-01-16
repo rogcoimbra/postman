@@ -1,77 +1,76 @@
-// Função para capturar e salvar o Auth Token
+// Function to capture and save the Auth Token
 function captureAuthToken() {
     try {
-        // Obter a resposta como JSON
+        // Get the response as JSON
         let responseBody = pm.response.json();
 
-        // Verificar se o id_token está presente na resposta
+        // Check if id_token is present in the response
         if (responseBody && responseBody.id_token) {
             let authToken = responseBody.id_token;
             pm.environment.set("savedAuthToken", authToken);
-            console.log("Auth Token capturado e salvo:", authToken);
+            console.log("Auth Token captured and saved:", authToken);
         } else {
-            console.warn("id_token não encontrado na resposta.");
+            console.warn("id_token not found in the response.");
         }
     } catch (error) {
-        console.error("Erro ao capturar o Auth Token:", error);
+        console.error("Error capturing the Auth Token:", error);
     }
 }
 
-// Executar a função para capturar o Auth Token
+// Execute the function to capture the Auth Token
 captureAuthToken();
 
-
-// Função para capturar e salvar o SAP Token
+// Function to capture and save the SAP Token
 function captureSAPToken() {
     try {
-        // Obter a resposta como JSON
+        // Get the response as JSON
         let responseBody = pm.response.json();
 
-        // Verificar se o token está presente na resposta
+        // Check if the token is present in the response
         if (responseBody && responseBody.token) {
             let sapToken = responseBody.token;
             pm.environment.set("savedSAPToken", sapToken);
-            console.log("SAP Token capturado e salvo:", sapToken);
+            console.log("SAP Token captured and saved:", sapToken);
         } else {
-            console.warn("Token não encontrado na resposta.");
+            console.warn("Token not found in the response.");
         }
     } catch (error) {
-        console.error("Erro ao capturar o SAP Token:", error);
+        console.error("Error capturing the SAP Token:", error);
     }
 }
 
-// Executar a função para capturar o SAP Token
+// Execute the function to capture the SAP Token
 captureSAPToken();
 
-// Função para capturar e salvar o CSRF Token
+// Function to capture and save the CSRF Token
 function captureCSRFToken() {
     let csrfToken = pm.response.headers.get("x-csrf-token");
     if (csrfToken) {
         pm.environment.set("savedCSRFToken", csrfToken);
-        console.log("CSRF Token capturado:", csrfToken);
+        console.log("CSRF Token captured:", csrfToken);
     } else {
-        console.warn("CSRF Token não encontrado.");
+        console.warn("CSRF Token not found.");
     }
 }
 
-// Executar a função para capturar o CSRF Token
+// Execute the function to capture the CSRF Token
 captureCSRFToken();
 
-// Função para capturar e salvar o E-Tag
+// Function to capture and save the E-Tag
 function captureETag() {
-    // Obter a resposta como JSON
+    // Get the response as JSON
     let responseBody = pm.response.json();
 
-    // Verificar se a estrutura esperada está presente
+    // Check if the expected structure is present
     if (responseBody.d && responseBody.d.results && responseBody.d.results[0] && responseBody.d.results[0].__metadata && responseBody.d.results[0].__metadata.etag) {
         let eTag = responseBody.d.results[0].__metadata.etag;
-        let cleanedETag = eTag.replace(/\\/g, ""); // Limpar barras invertidas
+        let cleanedETag = eTag.replace(/\\/g, ""); // Clean backslashes
         pm.environment.set("savedDataEtag", cleanedETag);
-        console.log("E-Tag limpo:", cleanedETag);
+        console.log("Cleaned E-Tag:", cleanedETag);
     } else {
-        console.warn("E-Tag não encontrado ou estrutura de resposta inesperada.");
+        console.warn("E-Tag not found or unexpected response structure.");
     }
 }
 
-// Executar a função para capturar o E-tag
+// Execute the function to capture the E-Tag
 captureETag();
