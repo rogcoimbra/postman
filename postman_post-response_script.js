@@ -61,9 +61,18 @@ function captureETag() {
     // Get the response as JSON
     let responseBody = pm.response.json();
 
+    // Declare eTag variable
+    let eTag;
+
     // Check if the expected structure is present
-    if (responseBody.d && responseBody.d.results && responseBody.d.results[0] && responseBody.d.results[0].__metadata && responseBody.d.results[0].__metadata.etag) {
-        let eTag = responseBody.d.results[0].__metadata.etag;
+    if (responseBody.d && responseBody.d.__metadata && responseBody.d.__metadata.etag) {
+        eTag = responseBody.d.__metadata.etag;
+    } else if (responseBody.d && responseBody.d.results && responseBody.d.results[0] && responseBody.d.results[0].__metadata && responseBody.d.results[0].__metadata.etag) {
+        eTag = responseBody.d.results[0].__metadata.etag;
+    }
+
+    // Process eTag if it exists
+    if (eTag) {
         let cleanedETag = eTag.replace(/\\/g, ""); // Clean backslashes
         pm.environment.set("savedDataEtag", cleanedETag);
         console.log("Cleaned E-Tag:", cleanedETag);
@@ -71,6 +80,7 @@ function captureETag() {
         console.warn("E-Tag not found or unexpected response structure.");
     }
 }
+
 
 // Execute the function to capture the E-Tag
 captureETag();
